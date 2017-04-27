@@ -4,17 +4,34 @@ import Entry from './components/Entry';
 import NewEntry from './components/NewEntry';
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { items: ['Hello World 1', 'Hello World 2', 'Hello World 3'] };
+    console.log("state: " + JSON.stringify(this.state));
+  }
+
+  _getItems() {
+    let items = [];
+    this.state.items.forEach((item, idx) => {
+      items.push(<Entry
+        key={idx}
+        text={item}
+      />);
+    });
+    items.push(<NewEntry key={this.state.items.length}/>);
+    console.log("_getItems() returning items: " + JSON.stringify(items.length));
+    return items;
+  }
+
   render() {
+    console.log("render state items: " + JSON.stringify(this.state.items));
     return (
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.text}>My TODO App</Text>
         </View>
         <View style={styles.body}>
-          <Entry text={"Hello World 1"}/>
-          <Entry text={"Hello World 2"}/>
-          <Entry text={"Hello World 3"}/>
-          <NewEntry/>
+        {this._getItems()}
         </View>
       </View>
     );
