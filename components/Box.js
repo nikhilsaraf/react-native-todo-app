@@ -16,7 +16,13 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     margin: 6,
     backgroundColor: '#16a085',
-    height: 20,
+    height: 32,
+    borderColor: '#16a085',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingBottom: 5,
   },
 });
 

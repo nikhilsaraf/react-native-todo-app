@@ -19,8 +19,9 @@ Entry.propTypes = {
 
 const styles = StyleSheet.create({
   text: {
-    padding: 4,
-    paddingLeft: 7,
+    padding: 2,
+    paddingTop: 6,
+    paddingLeft: 6,
     color: '#000',
     alignItems: 'center',
     justifyContent: 'center',
