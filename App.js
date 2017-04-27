@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Entry from './components/Entry';
+import EditableEntry from './components/EditableEntry';
 import NewEntry from './components/NewEntry';
 
 export default class App extends React.Component {
@@ -10,15 +11,46 @@ export default class App extends React.Component {
     console.log("state: " + JSON.stringify(this.state));
   }
 
+  _pushRow() {
+    // copy
+    let newItems = JSON.parse(JSON.stringify(this.state.items))
+    // push
+    newItems.push(-1);
+
+    // setState and trigger a re-render
+    this.setState({ items: newItems });
+  }
+
+  _replaceRow(index, text) {
+    // copy
+    let newItems = JSON.parse(JSON.stringify(this.state.items))
+    // replace
+    newItems[index] = text;
+
+    // setState and trigger a re-render
+    this.setState({ items: newItems });
+  }
+
   _getItems() {
     let items = [];
     this.state.items.forEach((item, idx) => {
-      items.push(<Entry
-        key={idx}
-        text={item}
-      />);
+      if (item === -1) {
+        items.push(<EditableEntry
+          key={idx}
+          text={''}
+          onSubmit={(text) => this._replaceRow(idx, text)}
+        />);
+      } else {
+        items.push(<Entry
+          key={idx}
+          text={item}
+        />);
+      }
     });
-    items.push(<NewEntry key={this.state.items.length}/>);
+    items.push(<NewEntry
+      key={this.state.items.length}
+      callback={() => this._pushRow()}
+    />);
     console.log("_getItems() returning items: " + JSON.stringify(items.length));
     return items;
   }
