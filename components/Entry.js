@@ -1,15 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
+import Box from './Box';
 
 class Entry extends React.Component {
   render() {
     return (
-        <View style={styles.box}>
-            <Text style={styles.text}>
-            {this.props.text}
-            </Text>
-        </View>
+        <Box>
+          <Text style={styles.text}>{this.props.text}</Text>
+        </Box>
     );
   }
 }
@@ -19,12 +18,6 @@ Entry.propTypes = {
 };
 
 const styles = StyleSheet.create({
-  box: {
-    alignSelf: 'stretch',
-    margin: 6,
-    backgroundColor: '#16a085',
-    height: 20,
-  },
   text: {
     padding: 4,
     paddingLeft: 7,
@@ -36,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Entry
+export default Entry;
