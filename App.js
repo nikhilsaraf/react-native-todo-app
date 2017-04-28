@@ -23,7 +23,7 @@ export default class App extends React.Component {
 
   _pushRow() {
     // copy
-    let newItems = JSON.parse(JSON.stringify(this.state.items))
+    let newItems = JSON.parse(JSON.stringify(this.state.items));
 
     // push
     if (!this._hasDangler(newItems)) {
@@ -41,7 +41,7 @@ export default class App extends React.Component {
     }
 
     // copy
-    let newItems = JSON.parse(JSON.stringify(this.state.items))
+    let newItems = JSON.parse(JSON.stringify(this.state.items));
 
     // replace
     newItems[index] = text;
@@ -66,7 +66,7 @@ export default class App extends React.Component {
     }
 
     // copy
-    let newItems = JSON.parse(JSON.stringify(this.state.items))
+    let newItems = JSON.parse(JSON.stringify(this.state.items));
 
     // delete last element
     newItems.splice(newItems.length - 1, 1);
