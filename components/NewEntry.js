@@ -6,7 +6,7 @@ import Box from './Box';
 class NewEntry extends React.Component {
     render() {
         return (
-            <Box>
+            <Box style={styles.box}>
                 <Text
                     style={styles.plusText}
                     onPress={this.props.callback}
@@ -23,14 +23,20 @@ NewEntry.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  box: {
+    backgroundColor: '#27ae60',
+    borderColor: 'transparent',
+    height: 16,
+    marginBottom: 16,
+  },
   plusText: {
-    padding: 4,
-    paddingLeft: 7,
+    paddingLeft: 4,
     color: '#000',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 16,
+    fontSize: 20,
     fontFamily: 'Helvetica',
+    fontWeight: 'bold',
     textAlign: 'center',
   },
 });

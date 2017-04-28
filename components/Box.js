@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 class Box extends React.Component {
   render() {
     return (
-        <View style={styles.box}>
+        <View style={[styles.box, this.props.style]}>
         {this.props.children}
         </View>
     );
