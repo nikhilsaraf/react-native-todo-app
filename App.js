@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Container from './components/Container';
 import EntryList from './components/EntryList';
 
@@ -10,6 +11,7 @@ export default class App extends React.Component {
     this.state = {
       editableText: '',
       disableRemove: false,
+      completedItems: [],
       items: []
     };
     console.log("initial state: " + JSON.stringify(this.state));
@@ -80,27 +82,58 @@ export default class App extends React.Component {
         <View style={styles.header}>
           <Text style={styles.text}>My TODO App</Text>
         </View>
-        <KeyboardAwareScrollView
-          style={styles.scrollView}
-          extraHeight={90}
-          onKeyboardWillHide={(frames: Object) => {
-            this._removeDanglingRow();
-          }}
+        <ScrollableTabView
+          style={styles.tabView_view}
+          tabBarActiveTextColor="#000"
+          tabBarInactiveTextColor="#80ed8e"
+          tabBarUnderlineStyle={styles.tabView_underline}
+          tabBarTextStyle={styles.tabView_textStyle}
           >
-          <EntryList
-            editableText={this.state.editableText}
-            values={this.state.items}
-            onChangeText={(text) => this.setState({ editableText: text })}
-            onSubmit={(idx, text) => this._replaceRow(idx, text)}
-            onNewRow={() => this._pushRow()}
-          />
-        </KeyboardAwareScrollView>
+          <KeyboardAwareScrollView
+            tabLabel="TODO"
+            style={styles.scrollView}
+            extraHeight={90}
+            onKeyboardWillHide={(frames: Object) => {
+              this._removeDanglingRow();
+            }}
+            >
+            <EntryList
+              editableText={this.state.editableText}
+              values={this.state.items}
+              showPlus={true}
+              onChangeText={(text) => this.setState({ editableText: text })}
+              onSubmit={(idx, text) => this._replaceRow(idx, text)}
+              onNewRow={() => this._pushRow()}
+            />
+          </KeyboardAwareScrollView>
+          <ScrollView
+            tabLabel="Completed"
+            style={styles.scrollView}
+            >
+            <EntryList
+              values={this.state.completedItems}
+              showPlus={false}
+            />
+          </ScrollView>
+        </ScrollableTabView>
       </Container>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  tabView_view: {
+    borderColor: 'transparent',
+  },
+  tabView_underline: {
+    backgroundColor: "#000",
+    height: 2,
+  },
+  tabView_textStyle: {
+    fontSize: 14,
+    fontFamily: 'Helvetica',
+    textAlign: 'center',
+  },
   header: {
     alignItems: 'center',
     paddingTop: 20,

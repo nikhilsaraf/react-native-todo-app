@@ -23,11 +23,14 @@ class EntryList extends React.Component {
             />);
           }
         });
+
         // item for plus sign
-        items.push(<NewEntry
-          key={this.props.values.length}
-          callback={this.props.onNewRow}
-        />);
+        if (this.props.showPlus) {
+          items.push(<NewEntry
+            key={this.props.values.length}
+            callback={this.props.onNewRow}
+          />);
+        }
 
         console.log("EntryList rendering number of items: " + JSON.stringify(items.length));
 
@@ -40,15 +43,16 @@ class EntryList extends React.Component {
 }
 
 EntryList.propTypes = {
-    editableText: PropTypes.string.isRequired,
+    showPlus: PropTypes.bool.isRequired,
     values: PropTypes.arrayOf(
         PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.number
         ])).isRequired,
-    onChangeText: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired,
-    onNewRow: PropTypes.func.isRequired
+    editableText: PropTypes.string,
+    onChangeText: PropTypes.func,
+    onSubmit: PropTypes.func,
+    onNewRow: PropTypes.func
 }
 
 const styles = StyleSheet.create({
