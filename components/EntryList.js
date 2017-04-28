@@ -20,6 +20,10 @@ class EntryList extends React.Component {
             items.push(<Entry
               key={idx}
               text={item}
+              icon1={this.props.icon1}
+              icon2={this.props.icon2}
+              onPressIcon1={() => { this.props.onPressIcon1(idx); }}
+              onPressIcon2={() => { this.props.onPressIcon2(idx); }}
             />);
           }
         });
@@ -49,6 +53,10 @@ EntryList.propTypes = {
             PropTypes.string,
             PropTypes.number
         ])).isRequired,
+    icon1: PropTypes.string.isRequired,
+    icon2: PropTypes.string.isRequired,
+    onPressIcon1: PropTypes.func.isRequired,
+    onPressIcon2: PropTypes.func.isRequired,
     editableText: PropTypes.string,
     onChangeText: PropTypes.func,
     onSubmit: PropTypes.func,

@@ -75,6 +75,55 @@ export default class App extends React.Component {
     this.setState({ items: newItems });
   }
 
+  _delete(fromList, idx) {
+    let newFromList = JSON.parse(JSON.stringify(fromList));
+    newFromList.splice(idx, 1);
+
+    return newFromList;
+  }
+
+  _move(fromList, toList, idx) {
+    const item = fromList[idx];
+
+    // delete
+    const newFromList = this._delete(fromList, idx);
+
+    // add
+    let newToList = JSON.parse(JSON.stringify(toList));
+    newToList.push(item);
+
+    return {
+      newFromList: newFromList,
+      newToList: newToList
+    };
+  }
+
+  _actionCompleted(idx) {
+    const updated = this._move(this.state.items, this.state.completedItems, idx);
+    this.setState({
+      items: updated.newFromList,
+      completedItems: updated.newToList
+    });
+  }
+
+  _actionUndo(idx) {
+    const updated = this._move(this.state.completedItems, this.state.items, idx);
+    this.setState({
+      items: updated.newToList,
+      completedItems: updated.newFromList
+    });
+  }
+
+  _actionDeleteTodo(idx) {
+    const newItems = this._delete(this.state.items, idx);
+    this.setState({ items: newItems });
+  }
+
+  _actionDeleteCompleted(idx) {
+    const newCompletedItems = this._delete(this.state.completedItems, idx);
+    this.setState({ completedItems: newCompletedItems });
+  }
+
   render() {
     console.log("render state: " + JSON.stringify(this.state));
     return (
@@ -98,6 +147,10 @@ export default class App extends React.Component {
               editableText={this.state.editableText}
               values={this.state.items}
               showPlus={true}
+              icon1='check-circle'
+              icon2='delete'
+              onPressIcon1={(idx) => this._actionCompleted(idx) }
+              onPressIcon2={(idx) => this._actionDeleteTodo(idx) }
               onChangeText={(text) => this.setState({ editableText: text })}
               onSubmit={(idx, text) => this._replaceRow(idx, text)}
               onNewRow={() => this._pushRow()}
@@ -110,6 +163,10 @@ export default class App extends React.Component {
             <EntryList
               values={this.state.completedItems}
               showPlus={false}
+              icon1='undo'
+              icon2='delete'
+              onPressIcon1={(idx) => this._actionUndo(idx) }
+              onPressIcon2={(idx) => this._actionDeleteCompleted(idx) }
             />
           </ScrollView>
         </ScrollableTabView>
