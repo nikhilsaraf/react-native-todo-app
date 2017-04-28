@@ -79,9 +79,6 @@ export default class App extends React.Component {
     console.log("render state: " + JSON.stringify(this.state));
     return (
       <Container>
-        <View style={styles.header}>
-          <Text style={styles.text}>My TODO App</Text>
-        </View>
         <ScrollableTabView
           style={styles.tabView_view}
           tabBarActiveTextColor="#000"
@@ -90,7 +87,7 @@ export default class App extends React.Component {
           tabBarTextStyle={styles.tabView_textStyle}
           >
           <KeyboardAwareScrollView
-            tabLabel="TODO"
+            tabLabel="To Do"
             style={styles.scrollView}
             extraHeight={90}
             onKeyboardWillHide={(frames: Object) => {
@@ -133,14 +130,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Helvetica',
     textAlign: 'center',
-  },
-  header: {
-    alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 20,
-  },
-  text: {
-    color: '#000',
   },
   scrollView: {
     alignSelf: 'stretch',
