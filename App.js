@@ -1,9 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Entry from './components/Entry';
-import EditableEntry from './components/EditableEntry';
-import NewEntry from './components/NewEntry';
+import EntryList from './components/EntryList';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -74,31 +72,6 @@ export default class App extends React.Component {
     this.setState({ items: newItems });
   }
 
-  _getItems() {
-    let items = [];
-    this.state.items.forEach((item, idx) => {
-      if (item === -1) {
-        items.push(<EditableEntry
-          key={idx}
-          text={this.state.editableText}
-          onChangeText={(text) => this.setState({ editableText: text })}
-          onSubmit={(text) => this._replaceRow(idx, text)}
-        />);
-      } else {
-        items.push(<Entry
-          key={idx}
-          text={item}
-        />);
-      }
-    });
-    items.push(<NewEntry
-      key={this.state.items.length}
-      callback={() => this._pushRow()}
-    />);
-    console.log("_getItems() returning items: " + JSON.stringify(items.length));
-    return items;
-  }
-
   render() {
     console.log("render state: " + JSON.stringify(this.state));
     return (
@@ -113,9 +86,13 @@ export default class App extends React.Component {
             this._removeDanglingRow();
           }}
           >
-          <View style={styles.body}>
-          {this._getItems()}
-          </View>
+          <EntryList
+            editableText={this.state.editableText}
+            values={this.state.items}
+            onChangeText={(text) => this.setState({ editableText: text })}
+            onSubmit={(idx, text) => this._replaceRow(idx, text)}
+            onNewRow={() => this._pushRow()}
+          />
         </KeyboardAwareScrollView>
       </View>
     );
@@ -141,18 +118,5 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     alignSelf: 'stretch',
-  },
-  body: {
-    flex: 1,
-    paddingTop: 2,
-    paddingBottom: 2,
-    alignSelf: 'stretch',
-    margin: 15,
-    alignItems: 'center',
-    backgroundColor: '#27ae60',
-    borderColor: '#27ae60',
-    borderStyle: 'solid',
-    borderRadius: 8,
-    borderWidth: 1,
   },
 });
