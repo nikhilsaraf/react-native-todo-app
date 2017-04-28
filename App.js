@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Entry from './components/Entry';
 import EditableEntry from './components/EditableEntry';
 import NewEntry from './components/NewEntry';
@@ -62,9 +63,11 @@ export default class App extends React.Component {
         <View style={styles.header}>
           <Text style={styles.text}>My TODO App</Text>
         </View>
-        <View style={styles.body}>
-        {this._getItems()}
-        </View>
+        <KeyboardAwareScrollView style={styles.scrollView} extraHeight={90}>
+          <View style={styles.body}>
+          {this._getItems()}
+          </View>
+        </KeyboardAwareScrollView>
       </View>
     );
   }
@@ -86,6 +89,9 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#000',
+  },
+  scrollView: {
+    alignSelf: 'stretch',
   },
   body: {
     flex: 1,
