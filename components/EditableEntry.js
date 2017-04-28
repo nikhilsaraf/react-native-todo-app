@@ -4,20 +4,15 @@ import PropTypes from 'prop-types';
 import Box from './Box';
 
 class EditableEntry extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { text: props.text };
-  }
-
   render() {
     return (
         <Box>
             <TextInput
                 style={styles.textInput}
-                onChangeText={(text) => this.setState({ text: text }) }
+                onChangeText={this.props.onChangeText}
                 onSubmitEditing={(event) => this.props.onSubmit(event.nativeEvent.text)}
                 autoFocus={true}
-                value={this.state.text}
+                value={this.props.text}
             />
         </Box>
     );
@@ -26,6 +21,7 @@ class EditableEntry extends React.Component {
 
 EditableEntry.propTypes = {
   text: PropTypes.string.isRequired,
+  onChangeText: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired
 };
 
