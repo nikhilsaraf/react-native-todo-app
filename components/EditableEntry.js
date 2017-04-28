@@ -34,12 +34,13 @@ const styles = StyleSheet.create({
     paddingTop: 6,
     paddingLeft: 6,
     height: 28,
-    color: '#1aed9f',
+    color: '#27ae60',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 14,
     fontFamily: 'Helvetica',
     fontStyle: 'italic',
+    fontWeight: 'bold',
   },
 });
 

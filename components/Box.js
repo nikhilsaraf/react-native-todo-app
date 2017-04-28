@@ -15,9 +15,9 @@ const styles = StyleSheet.create({
   box: {
     alignSelf: 'stretch',
     margin: 6,
-    backgroundColor: '#16a085',
+    backgroundColor: '#80ed8e',
     height: 32,
-    borderColor: '#16a085',
+    borderColor: '#80ed8e',
     borderWidth: 1,
     borderRadius: 8,
     paddingLeft: 5,

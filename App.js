@@ -8,15 +8,18 @@ import NewEntry from './components/NewEntry';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { items: ['Hello World 1', 'Hello World 2', 'Hello World 3'] };
+    this.state = { items: [] };
     console.log("state: " + JSON.stringify(this.state));
   }
 
   _pushRow() {
     // copy
     let newItems = JSON.parse(JSON.stringify(this.state.items))
+
     // push
-    newItems.push(-1);
+    if (newItems.length == 0 || newItems[newItems.length - 1] !== -1) {
+      newItems.push(-1);
+    }
 
     // setState and trigger a re-render
     this.setState({ items: newItems });
@@ -27,6 +30,8 @@ export default class App extends React.Component {
     let newItems = JSON.parse(JSON.stringify(this.state.items))
     // replace
     newItems[index] = text;
+    // push new row too
+    newItems.push(-1);
 
     // setState and trigger a re-render
     this.setState({ items: newItems });
@@ -95,11 +100,15 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
+    paddingTop: 2,
+    paddingBottom: 2,
     alignSelf: 'stretch',
     margin: 15,
     alignItems: 'center',
+    backgroundColor: '#27ae60',
     borderColor: '#27ae60',
     borderStyle: 'solid',
+    borderRadius: 8,
     borderWidth: 1,
   },
 });
