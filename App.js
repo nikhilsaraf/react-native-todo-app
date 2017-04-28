@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Container from './components/Container';
 import EntryList from './components/EntryList';
 
 export default class App extends React.Component {
@@ -75,7 +76,7 @@ export default class App extends React.Component {
   render() {
     console.log("render state: " + JSON.stringify(this.state));
     return (
-      <View style={styles.container}>
+      <Container>
         <View style={styles.header}>
           <Text style={styles.text}>My TODO App</Text>
         </View>
@@ -94,20 +95,12 @@ export default class App extends React.Component {
             onNewRow={() => this._pushRow()}
           />
         </KeyboardAwareScrollView>
-      </View>
+      </Container>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#2ecc71',
-    alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 20,
-    justifyContent: 'center',
-  },
   header: {
     alignItems: 'center',
     paddingTop: 20,
