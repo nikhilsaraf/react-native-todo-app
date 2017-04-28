@@ -1,10 +1,14 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, StatusBar } from 'react-native';
 
 class Container extends React.Component {
   render() {
     return (
         <View style={styles.container}>
+        <StatusBar
+          barStyle="dark-content"
+          hidden={false}
+        />
         {this.props.children}
         </View>
     );
