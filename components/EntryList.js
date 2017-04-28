@@ -7,8 +7,6 @@ import NewEntry from './NewEntry';
 
 class EntryList extends React.Component {
     render() {
-        console.log("EntryList render");
-
         let items = [];
         this.props.values.forEach((item, idx) => {
           if (item === -1) {
