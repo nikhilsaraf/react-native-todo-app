@@ -9,7 +9,7 @@ class EditableEntry extends React.Component {
         <Box>
             <TextInput
                 style={styles.textInput}
-                onChangeText={this.props.onChangeText}
+                onChangeText={(text) => this.props.onChangeText(text)}
                 onSubmitEditing={(event) => this.props.onSubmit(event.nativeEvent.text)}
                 autoFocus={true}
                 value={this.props.text}

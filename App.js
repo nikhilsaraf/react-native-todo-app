@@ -9,81 +9,14 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      editableText: '',
       disableRemove: false,
       completedItems: [],
       items: []
     };
-    console.log("initial state: " + JSON.stringify(this.state));
-  }
-
-  _hasDangler(items) {
-    return items.length > 0 && items[items.length - 1] === -1;
-  }
-
-  _pushRow() {
-    // copy
-    let newItems = JSON.parse(JSON.stringify(this.state.items));
-
-    // push
-    if (!this._hasDangler(newItems)) {
-      newItems.push(-1);
-    }
-
-    // setState and trigger a re-render
-    this.setState({ items: newItems });
-  }
-
-  _replaceRow(index, text) {
-    if (text === '') {
-      // we don't want to save empty text
-      return;
-    }
-
-    // copy
-    let newItems = JSON.parse(JSON.stringify(this.state.items));
-
-    // replace
-    newItems[index] = text;
-
-    // push new row too
-    newItems.push(-1);
-
-    // setState and trigger a re-render
-    this.setState({
-      editableText: '',
-      // disableRemove because the keyboard close event will trigger removal of the dangling row just added
-      disableRemove: true,
-      items: newItems
-    });
-  }
-
-  _removeDanglingRow() {
-    if (!this._hasDangler(this.state.items) || this.state.disableRemove) {
-      // consume the disableRemove flag
-      this.setState({ disableRemove: false });
-      return;
-    }
-
-    // copy
-    let newItems = JSON.parse(JSON.stringify(this.state.items));
-
-    // delete last element
-    newItems.splice(newItems.length - 1, 1);
-
-    // setState and trigger a re-render
-    this.setState({ items: newItems });
-  }
-
-  _delete(fromList, idx) {
-    let newFromList = JSON.parse(JSON.stringify(fromList));
-    newFromList.splice(idx, 1);
-
-    return newFromList;
   }
 
   _move(fromList, toList, idx) {
-    const item = fromList[idx];
+    const item = this._newItem(fromList[idx].text, false, false);
 
     // delete
     const newFromList = this._delete(fromList, idx);
@@ -114,6 +47,12 @@ export default class App extends React.Component {
     });
   }
 
+  _delete(fromList, idx) {
+    let newFromList = JSON.parse(JSON.stringify(fromList));
+    newFromList.splice(idx, 1);
+    return newFromList;
+  }
+
   _actionDeleteTodo(idx) {
     const newItems = this._delete(this.state.items, idx);
     this.setState({ items: newItems });
@@ -122,6 +61,73 @@ export default class App extends React.Component {
   _actionDeleteCompleted(idx) {
     const newCompletedItems = this._delete(this.state.completedItems, idx);
     this.setState({ completedItems: newCompletedItems });
+  }
+
+  _setLastRowAsEmpty(newItems) {
+    const newRow = this._newItem('', true, false);
+    if (newItems.length > 0 && newItems[newItems.length - 1].isHidden === true) {
+      // set row as empty
+      newItems[newItems.length - 1] = newRow;
+    } else {
+      // push new row
+      newItems.push(newRow);
+    }
+  }
+
+  _save(idx, text) {
+    let newItems = JSON.parse(JSON.stringify(this.state.items));
+    if (text.trim().length == 0) {
+      // remove it
+      newItems.splice(idx, 1);
+    } else {
+      // save row as non-editable
+      newItems[idx] = this._newItem(text.trim(), false, false);
+
+      // new row
+      if (idx == newItems.length - 1) {
+        this._setLastRowAsEmpty(newItems);
+      }
+    }
+
+    // disable remove for this new row
+    this.setState({
+      disableRemove: true,
+      items: newItems
+    });
+  }
+
+  _plusRow() {
+    let newItems = JSON.parse(JSON.stringify(this.state.items));
+    this._setLastRowAsEmpty(newItems);
+    this.setState({ items: newItems });
+  }
+
+  _edit(idx, text) {
+    let newItems = JSON.parse(JSON.stringify(this.state.items));
+    newItems[idx] = this._newItem(text, true, false);
+    this.setState({ items: newItems });
+  }
+
+  _newItem(text, isEditable, isHidden) {
+    return {
+      text: text,
+      isEditable: isEditable,
+      isHidden: isHidden
+    };
+  }
+
+  _keyboardClosed() {
+    if (this.state.disableRemove) {
+      // don't remove, only consume the flag
+      this.setState({ disableRemove: false });
+      return;
+    }
+
+    // make editable rows non-editable
+    let newItems = this.state.items.map((item) => this._newItem(item.text, false, item.isHidden));
+    // filter out empty rows
+    newItems = newItems.filter((item) => item.text.trim().length != 0);
+    this.setState({ items: newItems });
   }
 
   render() {
@@ -139,21 +145,19 @@ export default class App extends React.Component {
             tabLabel="To Do"
             style={styles.scrollView}
             extraHeight={90}
-            onKeyboardWillHide={(frames: Object) => {
-              this._removeDanglingRow();
-            }}
+            onKeyboardWillHide={() => this._keyboardClosed()}
             >
             <EntryList
-              editableText={this.state.editableText}
               values={this.state.items}
               showPlus={true}
               icon1='check-circle'
               icon2='delete'
               onPressIcon1={(idx) => this._actionCompleted(idx) }
               onPressIcon2={(idx) => this._actionDeleteTodo(idx) }
-              onChangeText={(text) => this.setState({ editableText: text })}
-              onSubmit={(idx, text) => this._replaceRow(idx, text)}
-              onNewRow={() => this._pushRow()}
+              onPress={(idx) => this._edit(idx, this.state.items[idx].text)}
+              onChangeText={(idx, text) => this._edit(idx, text)}
+              onSubmit={(idx, text) => this._save(idx, text)}
+              onNewRow={() => this._plusRow()}
             />
           </KeyboardAwareScrollView>
           <ScrollView

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import Entry from './Entry';
 import EditableEntry from './EditableEntry';
@@ -9,22 +9,35 @@ class EntryList extends React.Component {
     render() {
         let items = [];
         this.props.values.forEach((item, idx) => {
-          if (item === -1) {
+          if (item.isHidden) {
+            return;
+          }
+
+          if (item.isEditable) {
             items.push(<EditableEntry
               key={idx}
-              text={this.props.editableText}
-              onChangeText={this.props.onChangeText}
+              text={item.text}
+              onChangeText={(text) => this.props.onChangeText(idx, text)}
               onSubmit={(text) => this.props.onSubmit(idx, text)}
             />);
           } else {
-            items.push(<Entry
-              key={idx}
-              text={item}
-              icon1={this.props.icon1}
-              icon2={this.props.icon2}
-              onPressIcon1={() => { this.props.onPressIcon1(idx); }}
-              onPressIcon2={() => { this.props.onPressIcon2(idx); }}
-            />);
+            const entry = (
+              <Entry
+                text={item.text}
+                icon1={this.props.icon1}
+                icon2={this.props.icon2}
+                onPressIcon1={() => { this.props.onPressIcon1(idx); }}
+                onPressIcon2={() => { this.props.onPressIcon2(idx); }}
+              />);
+            const touchableEntry = (
+              <TouchableOpacity
+                key={idx}
+                style={styles.tappable}
+                onPress={() => this.props.onPress(idx)}>
+              {entry}
+              </TouchableOpacity>
+            );
+            items.push(touchableEntry);
           }
         });
 
@@ -35,8 +48,6 @@ class EntryList extends React.Component {
             callback={this.props.onNewRow}
           />);
         }
-
-        console.log("EntryList rendering number of items: " + JSON.stringify(items.length));
 
         return (
             <View style={styles.body}>
@@ -49,21 +60,25 @@ class EntryList extends React.Component {
 EntryList.propTypes = {
     showPlus: PropTypes.bool.isRequired,
     values: PropTypes.arrayOf(
-        PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.number
-        ])).isRequired,
+      PropTypes.shape({
+        text: PropTypes.string.isRequired,
+        isEditable: PropTypes.bool.isRequired,
+        isHidden: PropTypes.bool.isRequired
+      })).isRequired,
     icon1: PropTypes.string.isRequired,
     icon2: PropTypes.string.isRequired,
     onPressIcon1: PropTypes.func.isRequired,
     onPressIcon2: PropTypes.func.isRequired,
-    editableText: PropTypes.string,
+    onPress: PropTypes.func,
     onChangeText: PropTypes.func,
     onSubmit: PropTypes.func,
     onNewRow: PropTypes.func
 }
 
 const styles = StyleSheet.create({
+    tappable: {
+        alignSelf: 'stretch',
+    },
     body: {
         flex: 1,
         paddingTop: 2,
