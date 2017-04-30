@@ -6,7 +6,18 @@ import EditableEntry from './EditableEntry';
 import NewEntry from './NewEntry';
 
 class EntryList extends React.Component {
+    _computeNumLines(charsPerLine, text) {
+      // decimal devision
+      const numFullLines = text.length / charsPerLine;
+      const numFullLinesTrunc = Math.trunc(numFullLines);
+      const numRemainderLines = numFullLines > numFullLinesTrunc ? 1 : 0;
+      const numLines = numFullLinesTrunc + numRemainderLines;
+      // allow max 3 lines of text
+      return numLines >= 3 ? 3 : numLines;
+    }
+
     render() {
+        const charsPerLine = 29;
         let items = [];
         this.props.values.forEach((item, idx) => {
           if (item.isHidden) {
@@ -24,6 +35,7 @@ class EntryList extends React.Component {
             const entry = (
               <Entry
                 text={item.text}
+                numberOfLines={this._computeNumLines(charsPerLine, item.text)}
                 icon1={this.props.icon1}
                 icon2={this.props.icon2}
                 onPressIcon1={() => { this.props.onPressIcon1(idx); }}

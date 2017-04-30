@@ -7,8 +7,17 @@ import Box from './Box';
 class Entry extends React.Component {
   render() {
     return (
-        <Box style={styles.box}>
-          <Text style={styles.text}>{this.props.text}</Text>
+        <Box
+          style={styles.box}
+          numberOfLines={this.props.numberOfLines}
+          >
+          <Text
+            style={styles.text}
+            numberOfLines={this.props.numberOfLines}
+            ellipsizeMode='tail'
+          >
+          {this.props.text}
+          </Text>
           <Icon
             style={styles.icon}
             name={this.props.icon1}
@@ -34,6 +43,7 @@ class Entry extends React.Component {
 
 Entry.propTypes = {
   text: PropTypes.string.isRequired,
+  numberOfLines: PropTypes.number.isRequired,
   icon1: PropTypes.string.isRequired,
   icon2: PropTypes.string.isRequired,
   onPressIcon1: PropTypes.func.isRequired,
@@ -47,9 +57,10 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 10,
-    padding: 2,
     paddingTop: 6,
+    paddingBottom: 2,
     paddingLeft: 6,
+    paddingRight: 2,
     color: '#000',
     alignItems: 'center',
     justifyContent: 'center',

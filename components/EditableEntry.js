@@ -6,7 +6,7 @@ import Box from './Box';
 class EditableEntry extends React.Component {
   render() {
     return (
-        <Box>
+        <Box numberOfLines={1}>
             <TextInput
                 style={styles.textInput}
                 onChangeText={(text) => this.props.onChangeText(text)}

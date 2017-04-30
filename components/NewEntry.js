@@ -6,7 +6,10 @@ import Box from './Box';
 class NewEntry extends React.Component {
     render() {
         return (
-            <Box style={styles.box}>
+            <Box
+                style={styles.box}
+                numberOfLines={1}
+                >
                 <Text
                     style={styles.plusText}
                     onPress={this.props.callback}

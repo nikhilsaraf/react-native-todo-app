@@ -81,7 +81,7 @@ export default class App extends React.Component {
       newItems.splice(idx, 1);
     } else {
       // save row as non-editable
-      newItems[idx] = this._newItem(text.trim(), false, false);
+      newItems[idx] = this._newItem(text, false, false);
 
       // new row
       if (idx == newItems.length - 1) {
@@ -110,7 +110,7 @@ export default class App extends React.Component {
 
   _newItem(text, isEditable, isHidden) {
     return {
-      text: text,
+      text: isEditable ? text : text.trim(),
       isEditable: isEditable,
       isHidden: isHidden
     };
