@@ -1,3 +1,7 @@
+/**
+ * @flow
+ */
+
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';

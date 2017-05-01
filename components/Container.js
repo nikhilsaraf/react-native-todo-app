@@ -1,3 +1,7 @@
+/**
+ * @flow
+ */
+
 import React from 'react';
 import { StyleSheet, View, StatusBar } from 'react-native';
 
