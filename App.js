@@ -10,7 +10,21 @@ import Container from './components/Container';
 import EntryList from './components/EntryList';
 
 export default class App extends React.Component {
-  constructor(props) {
+  state: {
+    disableRemove: boolean,
+    completedItems: Array<{
+        text: string,
+        isEditable: boolean,
+        isHidden: boolean
+      }>,
+    items: Array<{
+        text: string,
+        isEditable: boolean,
+        isHidden: boolean
+      }>,
+  };
+
+  constructor(props: {}) {
     super(props);
     this.state = {
       disableRemove: false,
