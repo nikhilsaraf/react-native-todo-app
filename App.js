@@ -164,6 +164,7 @@ export default class App extends React.Component {
             style={styles.scrollView}
             extraHeight={90}
             onKeyboardWillHide={() => this._keyboardClosed()}
+            enableResetScrollToCoords={false}
             >
             <EntryList
               values={this.state.items}
