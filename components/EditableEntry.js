@@ -17,6 +17,7 @@ class EditableEntry extends React.Component {
                 onSubmitEditing={(event) => this.props.onSubmit(event.nativeEvent.text)}
                 autoFocus={true}
                 value={this.props.text}
+                returnKeyType="done"
             />
         </Box>
     );
