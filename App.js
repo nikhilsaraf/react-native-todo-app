@@ -4,33 +4,42 @@
 
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { Record, List } from 'immutable';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Container from './components/Container';
 import EntryList from './components/EntryList';
 
+type Item = {
+  text: string,
+  isEditable: boolean,
+  isHidden: boolean
+};
+
+type Data = {
+  disableRemove: boolean,
+  completedItems: List<Item>,
+  items: List<Item>
+};
+
 export default class App extends React.Component {
-  state: {
-    disableRemove: boolean,
-    completedItems: Array<{
-        text: string,
-        isEditable: boolean,
-        isHidden: boolean
-      }>,
-    items: Array<{
-        text: string,
-        isEditable: boolean,
-        isHidden: boolean
-      }>,
-  };
+  // we need this key-value data wrapper around our Record because React expects an object for it's state
+  state: { data: Record<Data> };
 
   constructor(props: {}) {
     super(props);
     this.state = {
-      disableRemove: false,
-      completedItems: [],
-      items: []
+      data: new (Record({
+        disableRemove: false,
+        completedItems: List([]),
+        items: List([])
+      }))()
     };
+  }
+
+  _setState(updateObj) {
+    // $FlowFixMe - flow thinks that Record does not have a merge property
+    this.setState({ data: this.state.data.merge(updateObj) })
   }
 
   _move(fromList, toList, idx) {
@@ -50,16 +59,16 @@ export default class App extends React.Component {
   }
 
   _actionCompleted(idx) {
-    const updated = this._move(this.state.items, this.state.completedItems, idx);
-    this.setState({
+    const updated = this._move(this.state.data.get('items').toJSON(), this.state.data.get('completedItems').toJSON(), idx);
+    this._setState({
       items: updated.newFromList,
       completedItems: updated.newToList
     });
   }
 
   _actionUndo(idx) {
-    const updated = this._move(this.state.completedItems, this.state.items, idx);
-    this.setState({
+    const updated = this._move(this.state.data.get('completedItems').toJSON(), this.state.data.get('items').toJSON(), idx);
+    this._setState({
       items: updated.newToList,
       completedItems: updated.newFromList
     });
@@ -72,13 +81,13 @@ export default class App extends React.Component {
   }
 
   _actionDeleteTodo(idx) {
-    const newItems = this._delete(this.state.items, idx);
-    this.setState({ items: newItems });
+    const newItems = this._delete(this.state.data.get('items').toJSON(), idx);
+    this._setState({ items: newItems });
   }
 
   _actionDeleteCompleted(idx) {
-    const newCompletedItems = this._delete(this.state.completedItems, idx);
-    this.setState({ completedItems: newCompletedItems });
+    const newCompletedItems = this._delete(this.state.data.get('completedItems').toJSON(), idx);
+    this._setState({ completedItems: newCompletedItems });
   }
 
   _setLastRowAsEmpty(newItems) {
@@ -93,7 +102,7 @@ export default class App extends React.Component {
   }
 
   _save(idx, text) {
-    let newItems = JSON.parse(JSON.stringify(this.state.items));
+    let newItems = JSON.parse(JSON.stringify(this.state.data.get('items').toJSON()));
     if (text.trim().length == 0) {
       // remove it
       newItems.splice(idx, 1);
@@ -108,22 +117,22 @@ export default class App extends React.Component {
     }
 
     // disable remove for this new row
-    this.setState({
+    this._setState({
       disableRemove: true,
       items: newItems
     });
   }
 
   _plusRow() {
-    let newItems = JSON.parse(JSON.stringify(this.state.items));
+    let newItems = JSON.parse(JSON.stringify(this.state.data.get('items').toJSON()));
     this._setLastRowAsEmpty(newItems);
-    this.setState({ items: newItems });
+    this._setState({ items: newItems });
   }
 
   _edit(idx, text) {
-    let newItems = JSON.parse(JSON.stringify(this.state.items));
+    let newItems = JSON.parse(JSON.stringify(this.state.data.get('items').toJSON()));
     newItems[idx] = this._newItem(text, true, false);
-    this.setState({ items: newItems });
+    this._setState({ items: newItems });
   }
 
   _newItem(text, isEditable, isHidden) {
@@ -135,17 +144,17 @@ export default class App extends React.Component {
   }
 
   _keyboardClosed() {
-    if (this.state.disableRemove) {
+    if (this.state.data.get('disableRemove')) {
       // don't remove, only consume the flag
-      this.setState({ disableRemove: false });
+      this._setState({ disableRemove: false });
       return;
     }
 
     // make editable rows non-editable
-    let newItems = this.state.items.map((item) => this._newItem(item.text, false, item.isHidden));
+    let newItems = this.state.data.get('items').toJSON().map((item) => this._newItem(item.text, false, item.isHidden));
     // filter out empty rows
     newItems = newItems.filter((item) => item.text.trim().length != 0);
-    this.setState({ items: newItems });
+    this._setState({ items: newItems });
   }
 
   render() {
@@ -167,13 +176,13 @@ export default class App extends React.Component {
             enableResetScrollToCoords={false}
             >
             <EntryList
-              values={this.state.items}
+              values={this.state.data.get('items').toJSON()}
               showPlus={true}
               icon1='check-circle'
               icon2='delete'
               onPressIcon1={(idx) => this._actionCompleted(idx) }
               onPressIcon2={(idx) => this._actionDeleteTodo(idx) }
-              onPress={(idx) => this._edit(idx, this.state.items[idx].text)}
+              onPress={(idx) => this._edit(idx, this.state.data.get('items').get(idx).text)}
               onChangeText={(idx, text) => this._edit(idx, text)}
               onSubmit={(idx, text) => this._save(idx, text)}
               onNewRow={() => this._plusRow()}
@@ -184,7 +193,7 @@ export default class App extends React.Component {
             style={styles.scrollView}
             >
             <EntryList
-              values={this.state.completedItems}
+              values={this.state.data.get('completedItems').toJSON()}
               showPlus={false}
               icon1='undo'
               icon2='delete'
