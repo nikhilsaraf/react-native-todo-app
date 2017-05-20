@@ -182,7 +182,7 @@ export default class App extends React.Component {
               icon2='delete'
               onPressIcon1={(idx) => this._actionCompleted(idx) }
               onPressIcon2={(idx) => this._actionDeleteTodo(idx) }
-              onPress={(idx) => this._edit(idx, this.state.data.get('items').get(idx).text)}
+              onPress={(idx) => this._edit(idx, this.state.data.get('items').get(idx).get('text'))}
               onChangeText={(idx, text) => this._edit(idx, text)}
               onSubmit={(idx, text) => this._save(idx, text)}
               onNewRow={() => this._plusRow()}
