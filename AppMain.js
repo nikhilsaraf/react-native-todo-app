@@ -10,6 +10,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Container from './components/Container';
 import EntryList from './components/EntryList';
+import { actionTypes } from './reducers/Reducer';
 
 const mapStateToProps = (state) => ({
   disableRemove: state.data.get('disableRemove'),
@@ -21,7 +22,7 @@ class AppMain extends React.Component {
 
   _setState(updateObj) {
     this.props.dispatch({
-      type: 'UPDATE',
+      type: actionTypes.UPDATE,
       payload: {
         updateObj: updateObj
       }

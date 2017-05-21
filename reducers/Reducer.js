@@ -17,7 +17,7 @@ type Data = {
 };
 
 const actionTypes = {
-    EDIT: 'e',
+    UPDATE: 'u',
 };
 
 type ActionType = $Keys<typeof actionTypes>;
@@ -43,7 +43,7 @@ const reducer = (state: { data: Record<Data> } = initialState, action: Action) =
     const completedItems = data.get('completedItems')
     const { type, payload } = action;
 
-    if (type == 'UPDATE') {
+    if (type == actionTypes.UPDATE) {
         // $FlowFixMe - flow thinks that Record does not have a merge property
         return { data: state.data.merge(payload.updateObj) }
     } else {
@@ -51,4 +51,5 @@ const reducer = (state: { data: Record<Data> } = initialState, action: Action) =
     }
 };
 
+export { reducer, actionTypes };
 export default reducer;
