@@ -38,6 +38,7 @@ class EntryList extends React.Component {
           } else {
             const entry = (
               <Entry
+                key={idx}
                 text={item.text}
                 numberOfLines={this._computeNumLines(charsPerLine, item.text)}
                 icon1={this.props.icon1}
@@ -45,15 +46,19 @@ class EntryList extends React.Component {
                 onPressIcon1={() => { this.props.onPressIcon1(idx); }}
                 onPressIcon2={() => { this.props.onPressIcon2(idx); }}
               />);
-            const touchableEntry = (
-              <TouchableOpacity
-                key={idx}
-                style={styles.tappable}
-                onPress={() => this.props.onPress(idx)}>
-              {entry}
-              </TouchableOpacity>
-            );
-            items.push(touchableEntry);
+            if (this.props.onPress) {
+              const touchableEntry = (
+                <TouchableOpacity
+                  key={idx}
+                  style={styles.tappable}
+                  onPress={() => this.props.onPress(idx)}>
+                {entry}
+                </TouchableOpacity>
+              );
+              items.push(touchableEntry);
+            } else {
+              items.push(entry);
+            }
           }
         });
 
