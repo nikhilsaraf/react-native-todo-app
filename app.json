@@ -1,5 +1,22 @@
 {
-  "expo": {
-    "sdkVersion": "16.0.0"
-  }
+    expo: {
+        name: "Smooth TODO App",
+        description: "A Smooth TODO App that just works",
+        icon: "./logo/smooth-todo-logo.png",
+        version: "1.0.0",
+        sdkVersion: "16.0.0",
+        slug: "smooth-todo-app",
+        orientation: "portrait",
+        ios: {
+            bundleIdentifier: "com.nikhilsaraf.smooth-todo",
+            supportsTablet: true
+        },
+        android: {
+            package: "com.nikhilsaraf.smooth_todo"
+        },
+        loading: {
+            icon: "./logo/smooth-todo-logo.png",
+            hideExponentText: true
+        }
+   }
 }
